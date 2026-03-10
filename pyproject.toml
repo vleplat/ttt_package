@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ttt-package"
+version = "0.1.0"
+description = "Tubal Tensor Train (TTT) decomposition: TTT-SVD and TATCU (t-product + tensor train)."
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+  { name = "Valentin Leplat" },
+]
+dependencies = [
+  "numpy>=1.23",
+  "matplotlib>=3.7",
+  "imageio>=2.34",
+]
+
+[project.optional-dependencies]
+legacy = [
+  "tensorly>=0.8",
+  "scipy>=1.9",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

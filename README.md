@@ -1,0 +1,215 @@
+# Tubal Tensor Train (TTT) — Python package
+
+## Overview
+
+This repository provides a Python implementation of the tubal tensor train (TTT) decomposition.
+TTT is a tensor-network model that combines the t-product algebra of T-SVD (with a distinguished tube mode)
+and the low-order core structure of the tensor train (TT) format.
+
+For an order-$(N+1)$ tensor with a distinguished tube mode (length $T$), a TTT representation consists of:
+
+- Two boundary tubal cores and $N-2$ interior tubal cores, connected via the t-product
+- Storage scaling linearly in the number of modes for bounded tubal ranks (avoids high-order-core growth)
+
+Implemented algorithms:
+
+- **TTT-SVD**: sequential, fixed-rank construction (TT-SVD-style, but with local truncated T-SVD steps)
+- **TATCU**: Fourier-slice alternating refinement (ATCU on each frequency slice + rank synchronization)
+
+### Core convention
+
+All TTT cores are stored as 4D arrays with shape:
+
+$
+(r_{n-1}, I_n, r_n, T),
+\qquad r_0=r_N=1.
+$
+
+## Quick start (recommended)
+
+### Step 1: Install Python (3.9+)
+
+If you don't have Python installed:
+
+1. Go to [python.org](https://www.python.org/downloads/)
+2. Download **Python 3.9+**
+3. Install with default settings
+4. Verify in a terminal:
+
+```bash
+python3 --version
+```
+
+If `python3` is not available on your system, try:
+
+```bash
+python --version
+```
+
+**Windows (PowerShell)**:
+
+```powershell
+py --version
+python --version
+```
+
+### Step 2: Download this repository
+
+#### Option A (recommended): clone with git
+
+```bash
+git clone <REPO_URL_HERE>
+cd ttt_package
+```
+
+**Windows (PowerShell)**:
+
+```powershell
+git clone <REPO_URL_HERE>
+cd ttt_package
+```
+
+#### Option B: download ZIP
+
+1. Go to the repository page
+2. Click **Code** → **Download ZIP**
+3. Extract it to a folder
+4. Open a terminal in that folder
+
+### Step 3: Create a virtual environment
+
+From the project root:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -U pip
+```
+
+**Windows (PowerShell)**:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -U pip
+```
+
+**Windows (cmd.exe)**:
+
+```bat
+py -m venv .venv
+.venv\Scripts\activate.bat
+python -m pip install -U pip
+```
+
+### Step 4: Install `ttt_package`
+
+```bash
+python -m pip install -e .
+```
+
+**Windows (PowerShell)**:
+
+```powershell
+python -m pip install -e .
+```
+
+### Step 5 (optional): Install legacy dependencies
+
+Some legacy audited backends depend on `tensorly` and `scipy`:
+
+```bash
+python -m pip install -e ".[legacy]"
+```
+
+## Running the demo (chromatic gesture video)
+
+The main demo script is:
+
+- `test/demo_ttt_tatcu_chromatic_gesture.py`
+
+It generates a synthetic RGB video, reshapes it into a higher-order tensor (keeping time as the tube mode),
+then compares **TTT-SVD** and **TATCU** reconstructions.
+
+Run:
+
+```bash
+python test/demo_ttt_tatcu_chromatic_gesture.py
+```
+
+or (module form):
+
+```bash
+python -m test.demo_ttt_tatcu_chromatic_gesture
+```
+
+**Note (macOS / Matplotlib):** this demo forces Matplotlib’s non-interactive backend (`Agg`) to avoid
+native GUI backend crashes. It only saves figures; it does not open any windows.
+
+### Outputs
+
+Figures are saved under `output_figures/` as **both PNG and PDF**:
+
+- `output_figures/gesture_comparison.(png|pdf)`
+- `output_figures/gesture_per_frame_errors.(png|pdf)`
+
+(A small comparison GIF is also produced: `output_figures/gesture_comparison.gif`.)
+
+## Project structure
+
+```
+ttt_package/
+  src/ttt_package/
+    __init__.py
+    core.py
+    tproduct.py
+    tsvd.py
+    ttt_svd.py
+    tatcu.py
+    tt_backend.py
+    legacy/
+      __init__.py
+      tt_lib.py
+      tucker2_lib.py
+  legacy_backends/
+    tt_lib.py
+    tucker2_lib.py
+  test/
+    demo_ttt_tatcu_chromatic_gesture.py
+  supporting_materials/
+    ttt_arxiv.tex
+  output_figures/
+  pyproject.toml
+  README.md
+```
+
+## References
+
+The implementation follows the companion manuscript in `supporting_materials/ttt_arxiv.tex`:
+
+- Tubal tensor train (TTT): t-product + TT topology
+- TTT-SVD (fixed-rank) and TATCU (Fourier-slice ATCU refinement)
+
+## 📖 How to Cite
+
+If you use this code in academic work, please cite the accompanying paper draft 
+
+```
+@misc{ahmadi2026ttt,
+      title={A New Tensor Network: Tubal Tensor Train and Its Applications}, 
+      author={Ahmadi-Asl, Salman and Leplat, Valentin and Phan, Anh-Huy and Cichocki, Andrzej},
+      year={2026},
+      eprint={26XX.14683},
+      archivePrefix={arXiv},
+      primaryClass={math.OC},
+      url={https://arxiv.org/abs/2602.14683}, 
+}
+```
+
+and include a reference to this repository.
+
+## 📧 Support and Contact
+
+For questions, bug reports, or contributions, please contact:
+**v dot leplat [at] innopolis dot ru**
+

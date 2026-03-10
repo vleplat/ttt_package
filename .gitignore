@@ -1,0 +1,56 @@
+# =========================
+# Project-specific ignores
+# =========================
+
+# Generated demo outputs
+output_figures/
+
+# Supporting TeX material (not part of the package)
+supporting_materials/
+
+# Local notes / documents
+AUDIT_NOTES.md
+Install_and_Run.rtf
+
+
+# =========================
+# Python / packaging
+# =========================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+.venv/
+venv/
+ENV/
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+build/
+dist/
+*.egg-info/
+
+
+# =========================
+# Jupyter
+# =========================
+
+.ipynb_checkpoints/
+
+
+# =========================
+# OS / editor
+# =========================
+
+.DS_Store
+Thumbs.db
+
+.idea/
+.vscode/
+
