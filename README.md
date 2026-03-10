@@ -131,7 +131,7 @@ The main demo script is:
 It generates a synthetic RGB video, reshapes it into a higher-order tensor (keeping time as the tube mode),
 then compares **TTT-SVD** and **TATCU** reconstructions.
 
-Run:
+Run (default = fixed-rank TATCU):
 
 ```bash
 python test/demo_ttt_tatcu_chromatic_gesture.py
@@ -143,6 +143,64 @@ or (module form):
 python -m test.demo_ttt_tatcu_chromatic_gesture
 ```
 
+### Running TATCU with different settings
+
+The demo exposes the three TATCU variants through `--tatcu_mode`:
+
+#### 1) Fixed-rank TATCU (baseline / current default)
+
+```bash
+python test/demo_ttt_tatcu_chromatic_gesture.py \
+  --tatcu_mode fixed_rank \
+  --tt_ranks 1 4 6 6 3 1 \
+  --max_sweeps 4
+```
+
+- `--tt_ranks`: **full** TT rank profile (including boundary 1s), used on each Fourier slice.
+- `--max_sweeps`: number of left-right/right-left ATCU sweeps per processed slice.
+
+#### 2) Slice-adaptive TATCU (MATLAB-faithful slice budget)
+
+```bash
+python test/demo_ttt_tatcu_chromatic_gesture.py \
+  --tatcu_mode slice_adaptive \
+  --slice_rel_tol 0.11 \
+  --tt_ranks 1 4 6 6 3 1 \
+  --max_tt_ranks 1 8 10 10 6 1 \
+  --max_sweeps 4
+```
+
+- `--slice_rel_tol`: per-slice **relative** target used to form a slice error budget in the Fourier domain.
+- `--tt_ranks`: initial TT rank profile.
+- `--max_tt_ranks`: maximum rank caps for per-slice rank growth (if the target cannot be met at the initial ranks).
+
+#### 3) Global-tolerance TATCU (Parseval-budgeted slices)
+
+```bash
+python test/demo_ttt_tatcu_chromatic_gesture.py \
+  --tatcu_mode global_tol \
+  --eps_rel 0.11 \
+  --tt_ranks 1 4 6 6 3 1 \
+  --max_tt_ranks 1 8 10 10 6 1 \
+  --max_sweeps 2
+```
+
+- `--eps_rel`: **global** target for \(\|X-\hat X\|_F/\|X\|_F\) (the code verifies this when possible).
+- `--tt_ranks`: initial rank profile.
+- `--max_tt_ranks`: maximum rank caps for slice-wise rank growth.
+
+**Important:** a global tolerance does **not** imply a per-frame guarantee; the demo reports per-frame errors as diagnostics.
+
+#### Optional: overlay a target line on the per-frame error plot
+
+```bash
+python test/demo_ttt_tatcu_chromatic_gesture.py \
+  --tatcu_mode global_tol --eps_rel 0.11 \
+  --frame_target 0.11
+```
+
+This only affects the plot (a dashed horizontal line); it is not enforced per frame.
+
 **Note (macOS / Matplotlib):** this demo forces Matplotlib’s non-interactive backend (`Agg`) to avoid
 native GUI backend crashes. It only saves figures; it does not open any windows.
 
@@ -150,10 +208,23 @@ native GUI backend crashes. It only saves figures; it does not open any windows.
 
 Figures are saved under `output_figures/` as **both PNG and PDF**:
 
-- `output_figures/gesture_comparison.(png|pdf)`
-- `output_figures/gesture_per_frame_errors.(png|pdf)`
+- `output_figures/gesture_comparison__<tag>.(png|pdf)`
+- `output_figures/gesture_per_frame_errors__<tag>.(png|pdf)`
 
-(A small comparison GIF is also produced: `output_figures/gesture_comparison.gif`.)
+(A small comparison GIF is also produced: `output_figures/gesture_comparison__<tag>.gif`.)
+
+## TATCU API notes (important)
+
+This repo currently provides **three** TATCU entry points:
+
+- `tatcu_fixed_rank`: fixed TT-rank profile per Fourier slice (this is the current default)
+- `tatcu_slice_adaptive`: slice-wise adaptive ranks using a slice error budget, then rank synchronization
+- `tatcu_global_tol`: wrapper that allocates slice budgets from a **global** relative target \(\varepsilon\)
+
+For backward compatibility:
+
+- `tatcu = tatcu_fixed_rank`
+- `tatcu_prototype = tatcu_fixed_rank`
 
 ## Project structure
 
@@ -176,6 +247,8 @@ ttt_package/
     tucker2_lib.py
   test/
     demo_ttt_tatcu_chromatic_gesture.py
+  tests/
+    test_tatcu.py
   supporting_materials/
     ttt_arxiv.tex
   output_figures/

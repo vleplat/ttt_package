@@ -22,6 +22,9 @@ legacy = [
   "tensorly>=0.8",
   "scipy>=1.9",
 ]
+dev = [
+  "pytest>=7.0",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
