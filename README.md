@@ -258,10 +258,7 @@ ttt_package/
 
 ## References
 
-The implementation follows the companion manuscript in `supporting_materials/ttt_arxiv.tex`:
 
-- Tubal tensor train (TTT): t-product + TT topology
-- TTT-SVD (fixed-rank) and TATCU (Fourier-slice ATCU refinement)
 
 ## 📖 How to Cite
 
