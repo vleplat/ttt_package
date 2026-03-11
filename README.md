@@ -249,8 +249,6 @@ ttt_package/
     demo_ttt_tatcu_chromatic_gesture.py
   tests/
     test_tatcu.py
-  supporting_materials/
-    ttt_arxiv.tex
   output_figures/
   pyproject.toml
   README.md
