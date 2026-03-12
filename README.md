@@ -263,14 +263,14 @@ ttt_package/
 If you use this code in academic work, please cite the accompanying paper draft 
 
 ```
-@misc{ahmadi2026ttt,
+@misc{ahmadiasl2026newtensornetworktubal,
       title={A New Tensor Network: Tubal Tensor Train and Its Applications}, 
-      author={Ahmadi-Asl, Salman and Leplat, Valentin and Phan, Anh-Huy and Cichocki, Andrzej},
+      author={Salman Ahmadi-Asl and Valentin Leplat and Anh-Huy Phan and Andrzej Cichocki},
       year={2026},
-      eprint={26XX.14683},
+      eprint={2603.10503},
       archivePrefix={arXiv},
-      primaryClass={math.OC},
-      url={https://arxiv.org/abs/2602.14683}, 
+      primaryClass={math.NA},
+      url={https://arxiv.org/abs/2603.10503}, 
 }
 ```
 
